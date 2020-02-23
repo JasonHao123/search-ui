@@ -22,6 +22,7 @@ import {
   BooleanFacet
 } from "@elastic/react-search-ui-views";
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
+import CategoryFacet from "./CategoryFacet.js";
 
 const SORT_OPTIONS = [
   {
@@ -56,6 +57,7 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
 }
 
 const config = {
+  debug: true,
   alwaysSearchOnInitialLoad: true,
   searchQuery: {
     result_fields: {
@@ -201,12 +203,8 @@ export default function App() {
                       {wasSearched && (
                         <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
                       )}
-                      <Facet
-                        field="states"
-                        label="States"
-                        filterType="any"
-                        isFilterable={true}
-                      />
+                      <CategoryFacet />
+
                       <Facet
                         field="world_heritage_site"
                         label="World Heritage Site"
