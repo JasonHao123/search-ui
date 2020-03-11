@@ -1,5 +1,7 @@
-import React from "react";
+import React, { Component, Suspense } from 'react';
 import moment from "moment";
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
 
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import SiteSearchAPIConnector from "@elastic/search-ui-site-search-connector";
@@ -23,6 +25,40 @@ import {
 } from "@elastic/react-search-ui-views";
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
+import { useTranslation, withTranslation, Trans } from 'react-i18next';
+
+import i18next from 'i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+const i18nextOptions = {
+  // order and from where user language should be detected
+  order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+
+  // keys or params to lookup language from
+  lookupQuerystring: 'lng',
+  lookupCookie: 'i18next',
+  lookupLocalStorage: 'i18nextLng',
+  lookupFromPathIndex: 0,
+  lookupFromSubdomainIndex: 0,
+
+  // cache user language on
+  caches: ['localStorage', 'cookie'],
+  excludeCacheFor: ['cimode'], // languages to not persist (cookie, localStorage)
+
+  // optional expire and domain for set cookie
+  cookieMinutes: 10,
+  cookieDomain: 'myDomain',
+
+  // optional htmlTag with lang attribute, the default is:
+  htmlTag: document.documentElement,
+
+  // only detect languages that are in the whitelist
+  checkWhitelist: true
+};
+
+i18next
+  .use(LanguageDetector)
+  .init(i18nextOptions);
 
 const SORT_OPTIONS = [
   {
@@ -47,12 +83,12 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
 } else {
   connector = new AppSearchAPIConnector({
     searchKey:
-      process.env.REACT_APP_SEARCH_KEY || "search-371auk61r2bwqtdzocdgutmg",
+      process.env.REACT_APP_SEARCH_KEY || "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImF1dGhvcml0aWVzIjpbIlBFUk1JU1NJT05fUkVBRCIsIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwianRpIjoiOGNhMmI2NTQtZTNkNS00Yzk3LThhODctNjgyODQ4ZmE3Zjc4IiwidGVuYW50IjoiamFzb24iLCJjbGllbnRfaWQiOiJkZWZhdWx0In0.LGqO8fNovd8tLXTEkYFr4oFxfg2OvAvcfffgF_s9k2sAuIYuIt8ofRLs5np_N5v4OfjCi1WbDuocS8F_7jV3UoAXnBelScQO3iOrmYDgYcaUgHjHw3FTBBCYShsolRAheCIxfgMKq0o04ZLEFkp6osgF7igPeyU0DhNoJrcxcYsR6zSNU5rKBxbBU_sgVQGIYmV30B5EqQP9q2Q_LZCP6fTCZoCW5Ln-ntP3GmRTm4YJHVGuwy_LsTJ5NWMXUFXlMnDFpzEQKW62n2px1t9eze5b2WoCSS-e6LjBlm5235P9tXd9OYF_TgLroI2B9G5QWjcxsLenM3nOfwx3RMA9Ig",
     engineName:
       process.env.REACT_APP_SEARCH_ENGINE_NAME || "search-ui-examples",
     hostIdentifier:
       process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "host-2376rb",
-    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || ""
+    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "/catalog"
   });
 }
 
@@ -64,7 +100,7 @@ const config = {
       visitors: { raw: {} },
       world_heritage_site: { raw: {} },
       location: { raw: {} },
-      acres: { raw: {} },
+      catalog: { raw: {} },
       square_km: { raw: {} },
       title: {
         snippet: {
@@ -73,7 +109,7 @@ const config = {
         }
       },
       nps_link: { raw: {} },
-      states: { raw: {} },
+      cat: { raw: {} },
       date_established: { raw: {} },
       description: {
         snippet: {
@@ -82,18 +118,13 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["acres", "states", "date_established", "location"],
+    disjunctiveFacets: ["catalog", "category", "date_established", "location"],
     facets: {
       world_heritage_site: { type: "value" },
-      states: { type: "value", size: 30 },
-      acres: {
-        type: "range",
-        ranges: [
-          { from: -1, name: "Any" },
-          { from: 0, to: 1000, name: "Small" },
-          { from: 1001, to: 100000, name: "Medium" },
-          { from: 100001, name: "Large" }
-        ]
+      category: { type: "value", size: 30 },
+      catalog: {
+        type: "value",
+        size: 30
       },
       location: {
         // San Francisco. In the future, make this the user's current position
@@ -174,7 +205,15 @@ const config = {
   hasA11yNotifications: true
 };
 
+const changeLanguage = lng => {
+   i18next.changeLanguage(lng.currentTarget.value);
+   window.location.reload(false);
+};
+
 export default function App() {
+
+
+
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
@@ -200,11 +239,24 @@ export default function App() {
                   }
                   sideContent={
                     <div>
-                      {wasSearched && (
-                        <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
-                      )}
-                      <CategoryFacet />
+                    <fieldset className="sui-facet">
+                      <legend className="sui-facet__title">Language</legend>
+                      <div className="sui-boolean-facet">
 
+                        <select value={i18next.language} onChange={changeLanguage} className="lang" >
+                          <option value="zh">中文</option>
+                          <option value="ja">日语</option>
+                          <option value="de">Deutsch</option>
+                          <option value="en">English</option>
+                          <option value="fr">Français</option>
+                        </select>
+                    </div></fieldset>
+                      <Facet
+                        field="catalog"
+                        label="Catalog"
+                        view={SingleSelectFacet}
+                      />
+                      <CategoryFacet />
                       <Facet
                         field="world_heritage_site"
                         label="World Heritage Site"
@@ -224,11 +276,6 @@ export default function App() {
                         field="location"
                         label="Distance"
                         filterType="any"
-                      />
-                      <Facet
-                        field="acres"
-                        label="Acres"
-                        view={SingleSelectFacet}
                       />
                     </div>
                   }

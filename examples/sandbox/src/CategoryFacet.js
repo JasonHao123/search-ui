@@ -61,13 +61,12 @@ const useTreeItemStyles = makeStyles(theme => ({
 
 function StyledTreeItem(props) {
   const classes = useTreeItemStyles();
-  const { labelText, labelIcon: LabelIcon, labelInfo, color, bgColor, ...other } = props;
+  const { labelText, labelInfo, color, bgColor, ...other } = props;
 
   return (
     <TreeItem
       label={
         <div className={classes.labelRoot}>
-          <LabelIcon color="inherit" className={classes.labelIcon} />
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
           </Typography>
@@ -95,7 +94,6 @@ function StyledTreeItem(props) {
 StyledTreeItem.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
-  labelIcon: PropTypes.elementType.isRequired,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
 };
@@ -112,7 +110,7 @@ const useStyles = makeStyles({
 function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) {
   const classes = useStyles();
   console.log(facets);
-  var facet = facets["states"];
+  var facet = facets["category"];
   if(facet!==undefined) {
     facet = facet[0];
   }else {
@@ -134,17 +132,30 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     >
     {facet.data.map((item) => {
       return (
-    <StyledTreeItem key={item.id} nodeId={item.id} labelText={item.value} labelIcon={MailIcon} labelInfo={""+item.count}>
+    <StyledTreeItem key={item.id} nodeId={item.id}
+     labelText={item.value} labelInfo={""+item.count}>
       {item.children.map((sub) => {
         return (
         <StyledTreeItem key={sub.id}
-          nodeId={sub.id} onClick={() => addFilter('states',sub.value,'any')}
+          nodeId={sub.id} onClick={() => addFilter('category',sub.id,'any')}
           labelText={sub.value}
-          labelIcon={SupervisorAccountIcon}
           labelInfo={""+sub.count}
           color="#1a73e8"
           bgColor="#e8f0fe"
-        />
+        >
+            {sub.children.map((sub2) => {
+              return (
+              <StyledTreeItem key={sub2.id}
+                nodeId={sub2.id} onClick={() => addFilter('category',sub2.id,'any')}
+                labelText={sub2.value}
+                labelInfo={""+sub2.count}
+                color="#1a73e8"
+                bgColor="#e8f0fe"
+              />
+            );
+            })}
+
+        </StyledTreeItem>
       );
       })}
     </StyledTreeItem>

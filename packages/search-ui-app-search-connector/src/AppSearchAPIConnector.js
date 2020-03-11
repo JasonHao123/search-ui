@@ -61,6 +61,7 @@ class AppSearchAPIConnector {
       );
     }
 
+    var lang = localStorage.getItem("i18nextLng");
     this.client = ElasticAppSearch.createClient({
       ...(endpointBase && { endpointBase }), //Add property on condition
       ...(hostIdentifier && { hostIdentifier: hostIdentifier }),
@@ -68,9 +69,14 @@ class AppSearchAPIConnector {
       engineName: engineName,
       additionalHeaders: {
         "x-swiftype-integration": "search-ui",
+        "Accept-Language": lang,
         "x-swiftype-integration-version": version
       }
     });
+    this.client.apiEndpoint = endpointBase;
+    this.client.searchPath = "/search";
+    this.client.querySuggestionPath = "/suggestion";
+    this.client.clickPath = "/click";
     this.beforeSearchCall = beforeSearchCall;
     this.beforeAutocompleteResultsCall = beforeAutocompleteResultsCall;
     this.beforeAutocompleteSuggestionsCall = beforeAutocompleteSuggestionsCall;
