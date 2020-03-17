@@ -3,7 +3,6 @@ import React from "react";
 import Select, { components } from "react-select";
 
 import { FacetValue } from "./types";
-import { getFilterValueDisplay } from "./view-helpers";
 import { appendClassName } from "./view-helpers";
 
 function Option(props) {
@@ -23,8 +22,8 @@ Option.propTypes = {
 
 function toSelectBoxOption(filterValue) {
   return {
-    value: filterValue.value,
-    label: getFilterValueDisplay(filterValue.value),
+    value: filterValue.id,
+    label: filterValue.value,
     count: filterValue.count
   };
 }

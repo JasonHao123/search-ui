@@ -20,6 +20,7 @@ import {
 import {
   Layout,
   SingleSelectFacet,
+  MultiCheckboxFacet,
   SingleLinksFacet,
   BooleanFacet
 } from "@elastic/react-search-ui-views";
@@ -118,9 +119,9 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["catalog", "category", "date_established", "location"],
+    disjunctiveFacets: ["catalog", "category", "tenant", "price_c"],
     facets: {
-      world_heritage_site: { type: "value" },
+      tenant: { type: "value" },
       category: { type: "value", size: 30 },
       catalog: {
         type: "value",
@@ -137,33 +138,7 @@ const config = {
           { from: 500, name: "Perhaps fly?" }
         ]
       },
-      date_established: {
-        type: "range",
-        ranges: [
-          {
-            from: moment()
-              .subtract(50, "years")
-              .toISOString(),
-            name: "Within the last 50 years"
-          },
-          {
-            from: moment()
-              .subtract(100, "years")
-              .toISOString(),
-            to: moment()
-              .subtract(50, "years")
-              .toISOString(),
-            name: "50 - 100 years ago"
-          },
-          {
-            to: moment()
-              .subtract(100, "years")
-              .toISOString(),
-            name: "More than 100 years ago"
-          }
-        ]
-      },
-      visitors: {
+      price_c: {
         type: "range",
         ranges: [
           { from: 0, to: 10000, name: "0 - 10000" },
@@ -258,24 +233,14 @@ export default function App() {
                       />
                       <CategoryFacet />
                       <Facet
-                        field="world_heritage_site"
-                        label="World Heritage Site"
-                        view={BooleanFacet}
+                        field="tenant"
+                        label="Platform"
+                        view={MultiCheckboxFacet}
                       />
                       <Facet
-                        field="visitors"
-                        label="Visitors"
+                        field="price_c"
+                        label="Price"
                         view={SingleLinksFacet}
-                      />
-                      <Facet
-                        field="date_established"
-                        label="Date Established"
-                        filterType="any"
-                      />
-                      <Facet
-                        field="location"
-                        label="Distance"
-                        filterType="any"
                       />
                     </div>
                   }
