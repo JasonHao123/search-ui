@@ -1,9 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
 
-import { appendClassName } from "./view-helpers";
-import { isFieldValueWrapper } from "./types/FieldValueWrapper";
-
 function getFieldType(result, field, type) {
   if (result[field]) return result[field][type];
 }
@@ -35,66 +32,32 @@ function getEscapedField(result, field) {
   return Array.isArray(safeField) ? safeField.join(", ") : safeField;
 }
 
-function getEscapedFields(result) {
-  return Object.keys(result).reduce((acc, field) => {
-    // If we receive an arbitrary value from the response, we may not properly
-    // handle it, so we should filter out arbitrary values here.
-    //
-    // I.e.,
-    // Arbitrary value: "_metaField: '1939191'"
-    // vs.
-    // FieldValueWrapper: "_metaField: {raw: '1939191'}"
-    if (!isFieldValueWrapper(result[field])) return acc;
-    return { ...acc, [field]: getEscapedField(result, field) };
-  }, {});
-}
-
 function Result({
-  className,
   result,
   onClickLink,
   titleField,
   urlField,
-  ...rest
+  imageField,
+  priceField
 }) {
-  const fields = getEscapedFields(result);
   const title = getEscapedField(result, titleField);
   const url = getRaw(result, urlField);
+  const image = getRaw(result, imageField);
+  const price = getRaw(result, priceField);
 
   return (
-    <li className={appendClassName("sui-result", className)} {...rest}>
-      <div className="sui-result__header">
-        {title && !url && (
-          <span
-            className="sui-result__title"
-            dangerouslySetInnerHTML={{ __html: title }}
-          />
-        )}
-        {title && url && (
-          <a
-            className="sui-result__title sui-result__title-link"
-            dangerouslySetInnerHTML={{ __html: title }}
-            href={url}
-            onClick={onClickLink}
-            target="_blank"
-            rel="noopener noreferrer"
-          />
-        )}
-      </div>
-      <div className="sui-result__body">
-        <ul className="sui-result__details">
-          {Object.entries(fields).map(([fieldName, fieldValue]) => (
-            <li key={fieldName}>
-              <span className="sui-result__key">{fieldName}</span>{" "}
-              <span
-                className="sui-result__value"
-                dangerouslySetInnerHTML={{ __html: fieldValue }}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </li>
+    <article className="sui-result">
+      <img className="sui-result__img" src={image} alt=" " />
+      <p>{price}</p>
+      <a
+        className="sui-result__title"
+        dangerouslySetInnerHTML={{ __html: title }}
+        href={url}
+        onClick={onClickLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      />
+    </article>
   );
 }
 
@@ -103,7 +66,9 @@ Result.propTypes = {
   onClickLink: PropTypes.func.isRequired,
   className: PropTypes.string,
   titleField: PropTypes.string,
-  urlField: PropTypes.string
+  urlField: PropTypes.string,
+  imageField: PropTypes.string,
+  priceField: PropTypes.string
 };
 
 export default Result;

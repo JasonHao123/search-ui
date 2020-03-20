@@ -1,9 +1,9 @@
 @include block('result') {
   @include themeTypography;
   list-style: none;
-  padding: $sizeL 0;
   text-decoration: none;
   display: block;
+  position: relative;
   border: 1px solid #f0f0f0;
   background: white;
   border-radius: 4px;
@@ -41,10 +41,14 @@
   }
 
   @include element('title') {
-    font-size: 1.8em;
-    font-weight: $fontWeightNormal;
-    color: $black;
-    text-decoration: none;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  @include element('img') {
+    max-width:100%;
+    height:auto;
+    object-fit: cover;
   }
 
   @include element('title-link') {

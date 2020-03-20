@@ -11,7 +11,9 @@ function Layout({
   bodyContent,
   bodyFooter,
   bodyHeader,
-  sideContent
+  sideContent,
+  open,
+  toggle
 }) {
   return (
     <div className={appendClassName("sui-layout", className)}>
@@ -20,7 +22,11 @@ function Layout({
       </div>
       <div className="sui-layout-body">
         <div className="sui-layout-body__inner">
-          <LayoutSidebar className="sui-layout-sidebar">
+          <LayoutSidebar
+            className="sui-layout-sidebar"
+            open={open}
+            toggle={toggle}
+          >
             {sideContent}
           </LayoutSidebar>
           <div className="sui-layout-main">
@@ -45,7 +51,9 @@ Layout.propTypes = {
   bodyContent: PropTypes.node,
   bodyFooter: PropTypes.node,
   bodyHeader: PropTypes.node,
-  sideContent: PropTypes.node
+  sideContent: PropTypes.node,
+  open: PropTypes.bool,
+  toggle: PropTypes.func
 };
 
 export default Layout;

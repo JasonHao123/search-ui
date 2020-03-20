@@ -12,6 +12,8 @@ export class ResultContainer extends Component {
     clickThroughTags: PropTypes.arrayOf(PropTypes.string),
     titleField: PropTypes.string,
     urlField: PropTypes.string,
+    imageField: PropTypes.string,
+    priceField: PropTypes.string,
     view: PropTypes.func,
     result: ResultType.isRequired,
     shouldTrackClickThrough: PropTypes.bool,
@@ -42,6 +44,8 @@ export class ResultContainer extends Component {
       result,
       titleField,
       urlField,
+      imageField,
+      priceField,
       view,
       // eslint-disable-next-line no-unused-vars
       trackClickThrough,
@@ -60,6 +64,8 @@ export class ResultContainer extends Component {
       onClickLink: () => this.handleClickLink(result.id.raw),
       titleField,
       urlField,
+      imageField,
+      priceField,
       ...rest
     });
   }

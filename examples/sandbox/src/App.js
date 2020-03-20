@@ -1,7 +1,28 @@
 import React, { Component, Suspense } from 'react';
 import moment from "moment";
+import { fade, makeStyles } from '@material-ui/core/styles';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import Badge from '@material-ui/core/Badge';
+import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import AccountCircle from '@material-ui/icons/AccountCircle';
+import MailIcon from '@material-ui/icons/Mail';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import MoreIcon from '@material-ui/icons/MoreVert';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Button from '@material-ui/core/Button';
+import logo from './logo.svg';
 
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import SiteSearchAPIConnector from "@elastic/search-ui-site-search-connector";
@@ -180,52 +201,236 @@ const config = {
   hasA11yNotifications: true
 };
 
-const changeLanguage = lng => {
-   i18next.changeLanguage(lng.currentTarget.value);
+const changeLanguage = event => {
+   i18next.changeLanguage(event.target.value);
    window.location.reload(false);
 };
 
+const changeCurrency = event => {
+  localStorage.setItem('currency',event.target.value);
+  window.location.reload(false);
+};
+
+const changeLanguageNoRefresh = event => {
+   i18next.changeLanguage(event.target.value);
+};
+
+const changeCurrencyNoRefresh = event => {
+  localStorage.setItem('currency',event.target.value);
+};
+
+const useStyles = makeStyles(theme => ({
+  grow: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  logo: {
+    height: '10vmin',
+  },
+  search: {
+    position: 'relative',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: fade(theme.palette.common.white, 0.15),
+    '&:hover': {
+      backgroundColor: fade(theme.palette.common.white, 0.25),
+    },
+    marginRight: theme.spacing(2),
+    marginLeft: 0,
+    width: 'auto',
+    [theme.breakpoints.up('sm')]: {
+      marginLeft: theme.spacing(3),
+      width: '60vw',
+    },
+  },
+  searchIcon: {
+    padding: theme.spacing(0, 2),
+    height: '100%',
+    position: 'absolute',
+    pointerEvents: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  inputRoot: {
+    color: 'inherit',
+  },
+  inputInput: {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    [theme.breakpoints.up('md')]: {
+      width: '20ch',
+    },
+  },
+  sectionDesktop: {
+    display: 'none',
+    [theme.breakpoints.up('md')]: {
+      display: 'flex',
+    },
+  },
+  sectionMobile: {
+    display: 'flex',
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
+  },
+}));
+
 export default function App() {
 
+  const classes = useStyles();
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const [lang, setLang] = React.useState(null);
+
+  const isMenuOpen = Boolean(anchorEl);
+
+  const getLang = String(lang);
+
+  const [open, setOpen] = React.useState(false);
+
+  const handleProfileMenuOpen = event => {
+    setAnchorEl(!isMenuOpen);
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    window.location.reload(false);
+  };
+
+  const handleClose2 = () => {
+    setOpen(false);
+  };
 
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
         {({ wasSearched }) => {
           return (
-            <div className="App">
+            <div className={classes.root}>
+            <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+       <DialogContent>
+         <form className={classes.container}>
+         <FormControl className={classes.formControl}>
+         <Select value={`${i18next.language}`}
+             onChange={changeLanguageNoRefresh}
+           >
+             <MenuItem value="zh">中文</MenuItem>
+             <MenuItem value="ja">日语</MenuItem>
+             <MenuItem value="en">English</MenuItem>
+             <MenuItem value="fr">Français</MenuItem>
+             <MenuItem value="de">Deutsch</MenuItem>
+           </Select>
+           </FormControl>
+           <FormControl className={classes.formControl}>
+           <Select value={`${localStorage.getItem('currency')}`}
+               onChange={changeCurrencyNoRefresh}
+             >
+               <MenuItem value="USD">USD</MenuItem>
+               <MenuItem value="JPY">JPY</MenuItem>
+               <MenuItem value="EUR">EUR</MenuItem>
+               <MenuItem value="SEK">SEK</MenuItem>
+             </Select>
+             </FormControl>
+         </form>
+       </DialogContent>
+       <DialogActions>
+         <Button onClick={handleClose2} color="primary">
+           Cancel
+         </Button>
+         <Button onClick={handleClose} color="primary">
+           Ok
+         </Button>
+       </DialogActions>
+     </Dialog>
               <ErrorBoundary>
                 <Layout
+                  open={isMenuOpen}
+                  toggle={handleProfileMenuOpen}
                   header={
-                    <SearchBox
-                      autocompleteMinimumCharacters={3}
-                      autocompleteResults={{
-                        linkTarget: "_blank",
-                        sectionTitle: "Results",
-                        titleField: "title",
-                        urlField: "nps_link",
-                        shouldTrackClickThrough: true,
-                        clickThroughTags: ["test"]
-                      }}
-                      autocompleteSuggestions={true}
-                      debounceLength={0}
-                    />
+                    <AppBar position="static">
+                      <Toolbar>
+                      <IconButton onClick={handleProfileMenuOpen}
+                        edge="start"
+                        className={classes.sectionMobile}
+                        color="inherit"
+                        aria-label="open drawer"
+                      >
+                        <MenuIcon />
+                      </IconButton>
+                      <img src={logo} className={classes.logo} alt="logo" />
+
+                        <Typography className={classes.title} variant="h6" noWrap>
+                          {document.title}
+                        </Typography>
+                        <SearchBox className={classes.search}
+                          autocompleteMinimumCharacters={3}
+                          autocompleteResults={{
+                            linkTarget: "_blank",
+                            sectionTitle: "Results",
+                            titleField: "title",
+                            urlField: "nps_link",
+                            shouldTrackClickThrough: true,
+                            clickThroughTags: ["test"]
+                          }}
+                          autocompleteSuggestions={true}
+                          debounceLength={0}
+                        />
+                        <div className={classes.grow} />
+                        <div className={classes.sectionDesktop}>
+                          <FormControl className={classes.formControl}>
+                          <Select value={`${i18next.language}`}
+                              onChange={changeLanguage}
+                            >
+                              <MenuItem value="zh">中文</MenuItem>
+                              <MenuItem value="ja">日语</MenuItem>
+                              <MenuItem value="en">English</MenuItem>
+                              <MenuItem value="fr">Français</MenuItem>
+                              <MenuItem value="de">Deutsch</MenuItem>
+                            </Select>
+                            </FormControl>
+                            <FormControl className={classes.formControl}>
+                            <Select value={`${localStorage.getItem('currency')}`}
+                                onChange={changeCurrency}
+                              >
+                                <MenuItem value="USD">USD</MenuItem>
+                                <MenuItem value="JPY">JPY</MenuItem>
+                                <MenuItem value="EUR">EUR</MenuItem>
+                                <MenuItem value="SEK">SEK</MenuItem>
+                              </Select>
+                              </FormControl>
+                        </div>
+                        <div className={classes.sectionMobile}>
+                          <IconButton
+                            onClick={handleClickOpen}
+                            aria-label="show more"
+                            aria-haspopup="true"
+                            color="inherit"
+                          >
+                            <MoreIcon />
+                          </IconButton>
+                        </div>
+                      </Toolbar>
+                    </AppBar>
+
                   }
                   sideContent={
                     <div>
-                    <fieldset className="sui-facet">
-                      <legend className="sui-facet__title">Language</legend>
-                      <div className="sui-boolean-facet">
-
-                        <select value={i18next.language} onChange={changeLanguage} className="lang" >
-                          <option value="zh">中文</option>
-                          <option value="ja">日语</option>
-                          <option value="de">Deutsch</option>
-                          <option value="en">English</option>
-                          <option value="fr">Français</option>
-                        </select>
-                    </div></fieldset>
                       <Facet
                         field="catalog"
                         label="Catalog"
@@ -248,6 +453,8 @@ export default function App() {
                     <Results
                       titleField="title"
                       urlField="nps_link"
+                      imageField="image"
+                      priceField="price"
                       shouldTrackClickThrough={true}
                     />
                   }

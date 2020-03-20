@@ -85,18 +85,6 @@ function SearchBox(props) {
                     ...rest
                   });
                 }}
-                getButtonProps={additionalProps => {
-                  const { className, ...rest } = additionalProps || {};
-                  return {
-                    type: "submit",
-                    value: "Search",
-                    className: appendClassName(
-                      "button sui-search-box__submit",
-                      className
-                    ),
-                    ...rest
-                  };
-                }}
                 getAutocomplete={() => {
                   if (
                     useAutocomplete &&

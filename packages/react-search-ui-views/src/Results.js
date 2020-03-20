@@ -5,12 +5,12 @@ import { appendClassName } from "./view-helpers";
 
 function Results({ children, className, ...rest }) {
   return (
-    <ul
+    <section
       className={appendClassName("sui-results-container", className)}
       {...rest}
     >
       {children}
-    </ul>
+    </section>
   );
 }
 
