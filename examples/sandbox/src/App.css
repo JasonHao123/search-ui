@@ -18,6 +18,10 @@
   color: white;
 }
 
+.price {
+  padding-top: 40px;
+}
+
 .App-link {
   color: #61dafb;
 }

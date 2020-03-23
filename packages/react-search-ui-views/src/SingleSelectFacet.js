@@ -23,7 +23,7 @@ Option.propTypes = {
 function toSelectBoxOption(filterValue) {
   return {
     value: filterValue.id,
-    label: filterValue.value,
+    label: filterValue.label,
     count: filterValue.count
   };
 }

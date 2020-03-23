@@ -58,7 +58,7 @@ function MultiCheckboxFacet({
                   }
                 />
                 <span className="sui-multi-checkbox-facet__input-text">
-                  {getFilterValueDisplay(option.value)}
+                  {option.label}
                 </span>
               </div>
               <span className="sui-multi-checkbox-facet__option-count">

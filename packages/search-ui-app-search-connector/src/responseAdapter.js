@@ -3,12 +3,14 @@ function adaptation1AdaptFacetValue(
   additionalFacetValueFieldsForField = {}
 ) {
   const hasValue = facetValue.hasOwnProperty("value");
+  const hasLabel = facetValue.hasOwnProperty("label");
   const hasChildren = facetValue.hasOwnProperty("children");
 
-  const { id, count, value, children, ...rest } = facetValue;
+  const { id, label, count, value, children, ...rest } = facetValue;
   return {
     id,
     count,
+    label: hasLabel ? label : "",
     children: hasChildren ? children : [],
     value: hasValue
       ? value

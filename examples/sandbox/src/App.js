@@ -22,7 +22,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Button from '@material-ui/core/Button';
-import logo from './logo.svg';
+
+import './App.css';
 
 import AppSearchAPIConnector from "@elastic/search-ui-app-search-connector";
 import SiteSearchAPIConnector from "@elastic/search-ui-site-search-connector";
@@ -47,6 +48,7 @@ import {
 } from "@elastic/react-search-ui-views";
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
+import PriceFacet from "./PriceFacet.js";
 import { useTranslation, withTranslation, Trans } from 'react-i18next';
 
 import i18next from 'i18next';
@@ -91,6 +93,11 @@ const SORT_OPTIONS = [
   {
     name: "Title",
     value: "title",
+    direction: "asc"
+  },
+  {
+    name: "Price",
+    value: "price_c",
     direction: "asc"
   }
 ];
@@ -140,35 +147,18 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["catalog", "category", "tenant", "price_c"],
+    disjunctiveFacets: ["catalog", "category", "tenant","country","price_c"],
     facets: {
       tenant: { type: "value" },
+      country: { type: "value" },
       category: { type: "value", size: 30 },
-      catalog: {
-        type: "value",
-        size: 30
-      },
-      location: {
-        // San Francisco. In the future, make this the user's current position
-        center: "37.7749, -122.4194",
+      catalog: {  type: "value", size: 30},
+      price_c: {
         type: "range",
-        unit: "mi",
         ranges: [
           { from: 0, to: 100, name: "Nearby" },
           { from: 100, to: 500, name: "A longer drive" },
           { from: 500, name: "Perhaps fly?" }
-        ]
-      },
-      price_c: {
-        type: "range",
-        ranges: [
-          { from: 0, to: 10000, name: "0 - 10000" },
-          { from: 10001, to: 100000, name: "10001 - 100000" },
-          { from: 100001, to: 500000, name: "100001 - 500000" },
-          { from: 500001, to: 1000000, name: "500001 - 1000000" },
-          { from: 1000001, to: 5000000, name: "1000001 - 5000000" },
-          { from: 5000001, to: 10000000, name: "5000001 - 10000000" },
-          { from: 10000001, name: "10000001+" }
         ]
       }
     }
@@ -286,6 +276,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function getMeta(metaName) {
+  const metas = document.getElementsByTagName('meta');
+
+  for (let i = 0; i < metas.length; i++) {
+    if (metas[i].getAttribute('name') === metaName) {
+      return metas[i].getAttribute('content');
+    }
+  }
+
+  return '';
+}
+
 export default function App() {
 
   const classes = useStyles();
@@ -316,6 +318,7 @@ export default function App() {
   const handleClose2 = () => {
     setOpen(false);
   };
+
 
   return (
     <SearchProvider config={config}>
@@ -373,11 +376,7 @@ export default function App() {
                       >
                         <MenuIcon />
                       </IconButton>
-                      <img src={logo} className={classes.logo} alt="logo" />
-
-                        <Typography className={classes.title} variant="h6" noWrap>
-                          {document.title}
-                        </Typography>
+                      <img src={getMeta('logo')} className={classes.logo} alt="logo" className={classes.sectionDesktop} />
                         <SearchBox className={classes.search}
                           autocompleteMinimumCharacters={3}
                           autocompleteResults={{
@@ -431,12 +430,20 @@ export default function App() {
                   }
                   sideContent={
                     <div>
+                    {wasSearched && (
+                       <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
+                     )}
                       <Facet
                         field="catalog"
                         label="Catalog"
                         view={SingleSelectFacet}
                       />
                       <CategoryFacet />
+                      <Facet
+                        field="country"
+                        label="Country"
+                        view={MultiCheckboxFacet}
+                      />
                       <Facet
                         field="tenant"
                         label="Platform"
@@ -447,6 +454,7 @@ export default function App() {
                         label="Price"
                         view={SingleLinksFacet}
                       />
+                      <PriceFacet />
                     </div>
                   }
                   bodyContent={

@@ -6,6 +6,7 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import Typography from '@material-ui/core/Typography';
 import MailIcon from '@material-ui/icons/Mail';
+import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Label from '@material-ui/icons/Label';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
@@ -61,12 +62,14 @@ const useTreeItemStyles = makeStyles(theme => ({
 
 function StyledTreeItem(props) {
   const classes = useTreeItemStyles();
-  const { labelText, labelInfo, color, bgColor, ...other } = props;
-
+  const { selected,labelText, labelInfo, color, bgColor, ...other } = props;
   return (
     <TreeItem
       label={
         <div className={classes.labelRoot}>
+        {selected && (
+            <CheckIcon />
+         )}
           <Typography variant="body2" className={classes.labelText}>
             {labelText}
           </Typography>
@@ -94,6 +97,7 @@ function StyledTreeItem(props) {
 StyledTreeItem.propTypes = {
   bgColor: PropTypes.string,
   color: PropTypes.string,
+  selected: PropTypes.bool,
   labelInfo: PropTypes.string,
   labelText: PropTypes.string.isRequired,
 };
@@ -109,7 +113,8 @@ const useStyles = makeStyles({
 
 function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) {
   const classes = useStyles();
-  console.log(facets);
+  const filter = filters.find(f => f.field === "category" && f.type === "any");
+
   var facet = facets["category"];
   if(facet!==undefined) {
     facet = facet[0];
@@ -119,6 +124,17 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     };
   }
   console.log(facet);
+  function toggleSelection(id) {
+    console.log(filter);
+    if(!filter) {
+      addFilter('category',id,'any');
+    }else if(filter.values.includes(id)){
+      removeFilter('category',id,'any');
+    }else {
+      addFilter('category',id,'any');
+    }
+
+  }
   return (
     <fieldset className="sui-facet">
     <legend className="sui-facet__title">Category</legend>
@@ -132,22 +148,22 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     >
     {facet.data.map((item) => {
       return (
-    <StyledTreeItem key={item.id} nodeId={item.id}
-     labelText={item.value} labelInfo={""+item.count}>
+    <StyledTreeItem key={item.id} nodeId={item.id} selected={filter?filter.values.includes(item.id):false}
+     labelText={item.label} labelInfo={""+item.count}>
       {item.children.map((sub) => {
         return (
-        <StyledTreeItem key={sub.id}
-          nodeId={sub.id} onClick={() => addFilter('category',sub.id,'any')}
-          labelText={sub.value}
+        <StyledTreeItem key={sub.id} selected={filter?filter.values.includes(sub.id):false}
+          nodeId={sub.id} onClick={() => toggleSelection(sub.id)}
+          labelText={sub.label}
           labelInfo={""+sub.count}
-          color="#1a73e8"
+          color="#3a3a3a"
           bgColor="#e8f0fe"
         >
             {sub.children.map((sub2) => {
               return (
-              <StyledTreeItem key={sub2.id}
-                nodeId={sub2.id} onClick={() => addFilter('category',sub2.id,'any')}
-                labelText={sub2.value}
+              <StyledTreeItem key={sub2.id} selected={filter?filter.values.includes(sub2.id):false}
+                nodeId={sub2.id} onClick={() => toggleSelection(sub2.id)}
+                labelText={sub2.label}
                 labelInfo={""+sub2.count}
                 color="#1a73e8"
                 bgColor="#e8f0fe"
