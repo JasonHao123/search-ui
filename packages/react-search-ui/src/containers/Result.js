@@ -13,6 +13,8 @@ export class ResultContainer extends Component {
     titleField: PropTypes.string,
     urlField: PropTypes.string,
     imageField: PropTypes.string,
+    platformField: PropTypes.string,
+    platformLinkField: PropTypes.string,
     priceField: PropTypes.string,
     view: PropTypes.func,
     result: ResultType.isRequired,
@@ -45,6 +47,8 @@ export class ResultContainer extends Component {
       titleField,
       urlField,
       imageField,
+      platformField,
+      platformLinkField,
       priceField,
       view,
       // eslint-disable-next-line no-unused-vars
@@ -65,6 +69,8 @@ export class ResultContainer extends Component {
       titleField,
       urlField,
       imageField,
+      platformField,
+      platformLinkField,
       priceField,
       ...rest
     });

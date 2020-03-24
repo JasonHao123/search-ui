@@ -38,17 +38,33 @@ function Result({
   titleField,
   urlField,
   imageField,
+  platformField,
+  platformLinkField,
   priceField
 }) {
   const title = getEscapedField(result, titleField);
   const url = getRaw(result, urlField);
   const image = getRaw(result, imageField);
   const price = getRaw(result, priceField);
+  const platform = getEscapedField(result, platformField);
+  const platformLink = getRaw(result, platformLinkField);
 
   return (
     <article className="sui-result">
-      <img className="sui-result__img" src={image} alt=" " />
-      <p>{price}</p>
+      <a
+        href={url}
+        onClick={onClickLink}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img className="sui-result__img" src={image} alt=" " />
+      </a>
+      <p>
+        <a href={platformLink} onClick={onClickLink}>
+          {platform}
+        </a>{" "}
+        {price}
+      </p>
       <a
         className="sui-result__title"
         dangerouslySetInnerHTML={{ __html: title }}
@@ -68,6 +84,8 @@ Result.propTypes = {
   titleField: PropTypes.string,
   urlField: PropTypes.string,
   imageField: PropTypes.string,
+  platformField: PropTypes.string,
+  platformLinkField: PropTypes.string,
   priceField: PropTypes.string
 };
 

@@ -147,20 +147,12 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["catalog", "category", "tenant","country","price_c"],
+    disjunctiveFacets: ["catalog", "category", "tenant","country"],
     facets: {
       tenant: { type: "value" },
       country: { type: "value" },
       category: { type: "value", size: 30 },
-      catalog: {  type: "value", size: 30},
-      price_c: {
-        type: "range",
-        ranges: [
-          { from: 0, to: 100, name: "Nearby" },
-          { from: 100, to: 500, name: "A longer drive" },
-          { from: 500, name: "Perhaps fly?" }
-        ]
-      }
+      catalog: {  type: "value", size: 30}
     }
   },
   autocompleteQuery: {
@@ -338,6 +330,8 @@ export default function App() {
              <MenuItem value="en">English</MenuItem>
              <MenuItem value="fr">Français</MenuItem>
              <MenuItem value="de">Deutsch</MenuItem>
+             <MenuItem value="es">Espanol</MenuItem>
+             <MenuItem value="pt">Português</MenuItem>
            </Select>
            </FormControl>
            <FormControl className={classes.formControl}>
@@ -401,6 +395,8 @@ export default function App() {
                               <MenuItem value="en">English</MenuItem>
                               <MenuItem value="fr">Français</MenuItem>
                               <MenuItem value="de">Deutsch</MenuItem>
+                              <MenuItem value="es">Espanol</MenuItem>
+                              <MenuItem value="pt">Português</MenuItem>
                             </Select>
                             </FormControl>
                             <FormControl className={classes.formControl}>
@@ -410,6 +406,7 @@ export default function App() {
                                 <MenuItem value="USD">USD</MenuItem>
                                 <MenuItem value="JPY">JPY</MenuItem>
                                 <MenuItem value="EUR">EUR</MenuItem>
+                                <MenuItem value="CNY">CNY</MenuItem>
                                 <MenuItem value="SEK">SEK</MenuItem>
                               </Select>
                               </FormControl>
@@ -449,11 +446,6 @@ export default function App() {
                         label="Platform"
                         view={MultiCheckboxFacet}
                       />
-                      <Facet
-                        field="price_c"
-                        label="Price"
-                        view={SingleLinksFacet}
-                      />
                       <PriceFacet />
                     </div>
                   }
@@ -462,6 +454,8 @@ export default function App() {
                       titleField="title"
                       urlField="nps_link"
                       imageField="image"
+                      platformField="platform"
+                      platformLinkField="platform_link"
                       priceField="price"
                       shouldTrackClickThrough={true}
                     />

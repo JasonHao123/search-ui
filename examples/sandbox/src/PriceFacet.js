@@ -15,57 +15,134 @@ import ForumIcon from '@material-ui/icons/Forum';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import Slider from '@material-ui/core/Slider';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import NumberFormat from 'react-number-format';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 
-  const value = [0, 1000];
-  const range = {
-    "USD": [0,5000],
-    "EUR": [0,5000],
-    "SEK": [0,20000]
-  };
-  function valuetext(value) {
-    return `${value}°C`;
-  }
+const currencies = {
+  "USD": ['$',''],
+  "EUR": ['€',''],
+  "CNY": ['¥',''],
+  "JPY": ['¥',''],
+  "SEK": ['','kr']
+};
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+  range: {
+    width: '40%',
+  },
+}));
+
+
+  function NumberFormatCustom(props) {
+  const { inputRef, onChange, ...other } = props;
+  const currency = currencies[localStorage.getItem('currency')];
+  return (
+    <NumberFormat
+      {...other}
+      getInputRef={inputRef}
+      onValueChange={values => {
+        console.log(values);
+        onChange({
+          target: {
+            value: values.value,
+          },
+        });
+      }}
+      thousandSeparator
+      isNumericString
+      prefix={currency[0]}
+      suffix={currency[1]}
+    />
+  );
+}
+
+NumberFormatCustom.propTypes = {
+  inputRef: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 function PriceFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) {
-
-
-  const handleChange = (event, newValue) => {
-  //  setValue(newValue);
-  // console.log(newValue);
-    value[0] = newValue[0];
-    value[1] = newValue[1];
-    const filter = filters.find(f => f.field === "price_c" && f.type === "all");
-    if(!filter) {
-      addFilter("price_c",{
-        to: value[1],
-        from: value[0],
-        name: "price_c"
-      },"all");
-    }else {
-      setFilter("price_c",{
-        to: value[1],
-        from: value[0],
-        name: "price_c"
-      },"all");
+  const classes = useStyles();
+  const [from, setFrom] = React.useState('0');
+  const [to, setTo] = React.useState('99999');
+  const handleChange = event => {
+    if(event.target.value != '') {
+      setFrom( event.target.value);
+      const filter = filters.find(f => f.field === "price_c" && f.type === "all");
+      if(!filter) {
+        addFilter("price_c",{
+          to: to,
+          from: event.target.value,
+          name: "price_c"
+        },"all");
+      }else {
+        setFilter("price_c",{
+          to: to,
+          from: event.target.value,
+          name: "price_c"
+        },"all");
+      }
     }
   };
+
+  const handleChange2 = event => {
+    if(event.target.value != '') {
+      setTo( event.target.value);
+      const filter = filters.find(f => f.field === "price_c" && f.type === "all");
+      if(!filter) {
+        addFilter("price_c",{
+          to: event.target.value,
+          from: from,
+          name: "price_c"
+        },"all");
+      }else {
+        setFilter("price_c",{
+          to: event.target.value,
+          from: from,
+          name: "price_c"
+        },"all");
+      }
+    }
+  };
+
   return (
     <fieldset className="sui-facet">
-    <legend className="sui-facet__title">Price</legend>
-    <div className="price">
-    <Slider
-      min={range[localStorage.getItem('currency')?localStorage.getItem('currency'):"USD"][0]}
-      max={range[localStorage.getItem('currency')?localStorage.getItem('currency'):"USD"][1]}
-      value={value}
-      onChange={handleChange}
-      getAriaValueText={valuetext}
-      aria-labelledby="range-slider"
-      valueLabelDisplay="on"
-    />
-    </div>
-    </fieldset>
+      <legend className="sui-facet__title">Price</legend>
+      <FormGroup row>
+      <TextField
+label="From" className={classes.range}
+value={from}
+onChange={handleChange}
+name="from"
+id="formatted-numberformat-input"
+InputProps={{
+  inputComponent: NumberFormatCustom,
+}}
+/>
+   &nbsp;&nbsp;&nbsp;
+<TextField
+label="To" className={classes.range}
+value={to}
+onChange={handleChange2}
+name="to"
+id="formatted-numberformat-input2"
+InputProps={{
+inputComponent: NumberFormatCustom,
+}}
+/>
+      </FormGroup>
+      </fieldset>
   );
 }
 

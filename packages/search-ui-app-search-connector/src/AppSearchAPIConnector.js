@@ -63,6 +63,10 @@ class AppSearchAPIConnector {
 
     var lang = localStorage.getItem("i18nextLng");
     var currency = localStorage.getItem("currency");
+    if (!currency) {
+      currency = "USD";
+      localStorage.setItem("currency", currency);
+    }
     this.client = ElasticAppSearch.createClient({
       ...(endpointBase && { endpointBase }), //Add property on condition
       ...(hostIdentifier && { hostIdentifier: hostIdentifier }),
@@ -71,7 +75,7 @@ class AppSearchAPIConnector {
       additionalHeaders: {
         "x-swiftype-integration": "search-ui",
         "Accept-Language": lang,
-        currency: currency ? currency : "USD",
+        currency: currency,
         "x-swiftype-integration-version": version
       }
     });

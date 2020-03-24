@@ -20,6 +20,8 @@ export class ResultsContainer extends Component {
     titleField: PropTypes.string,
     urlField: PropTypes.string,
     imageField: PropTypes.string,
+    platformField: PropTypes.string,
+    platformLinkField: PropTypes.string,
     priceField: PropTypes.string,
     view: PropTypes.func,
     shouldTrackClickThrough: PropTypes.bool,
@@ -42,6 +44,8 @@ export class ResultsContainer extends Component {
       titleField,
       urlField,
       imageField,
+      platformField,
+      platformLinkField,
       priceField,
       view,
       ...rest
@@ -59,6 +63,8 @@ export class ResultsContainer extends Component {
           urlField={urlField}
           imageField={imageField}
           priceField={priceField}
+          platformField={platformField}
+          platformLinkField={platformLinkField}
           view={ResultView}
           result={result}
           shouldTrackClickThrough={shouldTrackClickThrough}
