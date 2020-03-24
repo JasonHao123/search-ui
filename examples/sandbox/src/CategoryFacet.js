@@ -15,6 +15,7 @@ import ForumIcon from '@material-ui/icons/Forum';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { useTranslation, withTranslation, Trans } from 'react-i18next';
 
 
 const useTreeItemStyles = makeStyles(theme => ({
@@ -113,6 +114,8 @@ const useStyles = makeStyles({
 
 function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) {
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
+
   const filter = filters.find(f => f.field === "category" && f.type === "any");
 
   var facet = facets["category"];
@@ -123,15 +126,16 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
       data:[]
     };
   }
-  console.log(facet);
-  function toggleSelection(id) {
+  function toggleSelection(id,parent) {
     console.log(filter);
     if(!filter) {
       addFilter('category',id,'any');
+      removeFilter('category',parent,'any');
     }else if(filter.values.includes(id)){
       removeFilter('category',id,'any');
     }else {
       addFilter('category',id,'any');
+      removeFilter('category',parent,'any');
     }
 
   }
@@ -153,7 +157,7 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
       {item.children.map((sub) => {
         return (
         <StyledTreeItem key={sub.id} selected={filter?filter.values.includes(sub.id):false}
-          nodeId={sub.id} onClick={() => toggleSelection(sub.id)}
+          nodeId={sub.id} onClick={() => toggleSelection(sub.id,item.id)}
           labelText={sub.label}
           labelInfo={""+sub.count}
           color="#3a3a3a"
@@ -162,7 +166,7 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
             {sub.children.map((sub2) => {
               return (
               <StyledTreeItem key={sub2.id} selected={filter?filter.values.includes(sub2.id):false}
-                nodeId={sub2.id} onClick={() => toggleSelection(sub2.id)}
+                nodeId={sub2.id} onClick={() => toggleSelection(sub2.id,sub.id)}
                 labelText={sub2.label}
                 labelInfo={""+sub2.count}
                 color="#1a73e8"
@@ -183,6 +187,13 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     </fieldset>
   );
 }
+
+
+CategoryFacet.propTypes = {
+  // Props
+  label: PropTypes.string
+};
+
 
 export default withSearch(({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) => ({
   filters,

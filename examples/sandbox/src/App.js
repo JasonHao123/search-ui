@@ -49,8 +49,8 @@ import {
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
 import PriceFacet from "./PriceFacet.js";
-import { useTranslation, withTranslation, Trans } from 'react-i18next';
-
+import { useTranslation,initReactI18next } from 'react-i18next';
+import Backend from 'i18next-xhr-backend';
 import i18next from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
@@ -81,6 +81,7 @@ const i18nextOptions = {
 };
 
 i18next
+  .use(Backend)
   .use(LanguageDetector)
   .init(i18nextOptions);
 
@@ -122,7 +123,7 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
 }
 
 const config = {
-  debug: true,
+  debug: false,
   alwaysSearchOnInitialLoad: true,
   searchQuery: {
     result_fields: {
@@ -281,7 +282,7 @@ function getMeta(metaName) {
 }
 
 export default function App() {
-
+  const { t, i18n } = useTranslation();
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -340,6 +341,7 @@ export default function App() {
              >
                <MenuItem value="USD">USD</MenuItem>
                <MenuItem value="JPY">JPY</MenuItem>
+               <MenuItem value="CNY">CNY</MenuItem>
                <MenuItem value="EUR">EUR</MenuItem>
                <MenuItem value="SEK">SEK</MenuItem>
              </Select>
@@ -348,10 +350,10 @@ export default function App() {
        </DialogContent>
        <DialogActions>
          <Button onClick={handleClose2} color="primary">
-           Cancel
+           {t('label.cancel')}
          </Button>
          <Button onClick={handleClose} color="primary">
-           Ok
+           {t('label.ok')}
          </Button>
        </DialogActions>
      </Dialog>
@@ -428,25 +430,25 @@ export default function App() {
                   sideContent={
                     <div>
                     {wasSearched && (
-                       <Sorting label={"Sort by"} sortOptions={SORT_OPTIONS} />
+                       <Sorting label={t('label.sortBy')} sortOptions={SORT_OPTIONS} />
                      )}
                       <Facet
                         field="catalog"
-                        label="Catalog"
+                        label={t('label.catalog')}
                         view={SingleSelectFacet}
                       />
-                      <CategoryFacet />
+                      <CategoryFacet label={t('label.category')} />
                       <Facet
                         field="country"
-                        label="Country"
+                        label={t('label.country')}
                         view={MultiCheckboxFacet}
                       />
                       <Facet
                         field="tenant"
-                        label="Platform"
+                        label={t('label.platform')}
                         view={MultiCheckboxFacet}
                       />
-                      <PriceFacet />
+                      <PriceFacet label={t('label.price')} />
                     </div>
                   }
                   bodyContent={

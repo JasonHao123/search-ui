@@ -1,5 +1,15 @@
 {
   "title": "Welcome to react using react-i18next",
+  "label": {
+    "cancel": "Cancel",
+    "ok": "OK",
+    "sortBy": "Sort By",
+    "catalog": "Catalog",
+    "category": "Category",
+    "country": "Country",
+    "price": "Price",
+    "platform": "Platform"
+  },
   "description": {
     "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
     "part2": "Switch language between english and german using buttons above."

@@ -1,5 +1,15 @@
 {
   "title": "Willkommen zu react und react-i18next",
+  "label": {
+    "cancel": "Cancel",
+    "ok": "OK",
+    "sortBy": "Sort By",
+    "catalog": "Catalog",
+    "category": "Category",
+    "country": "Country",
+    "price": "Price",
+    "platform": "Platform"
+  },
   "description": {
     "part1": "Um loszulegen, ändere <1>src/App(DE).js</1> speicheren und neuladen.",
     "part2": "Ändere die Sprachen zwischen deutsch und englisch mit Hilfe der beiden Schalter."
