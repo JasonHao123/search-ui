@@ -10,10 +10,8 @@
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.1);
   overflow-wrap: break-word;
   overflow: hidden;
+  margin-top: $sizeM;
 
-  & + & {
-    margin-top: $sizeXL;
-  }
 
   em {
     position: relative;

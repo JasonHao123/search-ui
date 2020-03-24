@@ -8,6 +8,7 @@
 
   @include element('label') {
     margin-right: $sizeS;
+    white-space: nowrap;
   }
 
   .sui-select__control {

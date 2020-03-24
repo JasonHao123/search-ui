@@ -23,6 +23,8 @@ import NumberFormat from 'react-number-format';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+import { useTranslation, withTranslation, Trans } from 'react-i18next';
+
 
 const currencies = {
   "USD": ['$',''],
@@ -74,6 +76,8 @@ NumberFormatCustom.propTypes = {
 
 function PriceFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,facets }) {
   const classes = useStyles();
+  const { t, i18n } = useTranslation();
+
   const [from, setFrom] = React.useState('0');
   const [to, setTo] = React.useState('99999');
   const handleChange = event => {
@@ -118,7 +122,7 @@ function PriceFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,fac
 
   return (
     <fieldset className="sui-facet">
-      <legend className="sui-facet__title">Price</legend>
+      <legend className="sui-facet__title">{t('label.price')}</legend>
       <FormGroup row>
       <TextField
 label="From" className={classes.range}

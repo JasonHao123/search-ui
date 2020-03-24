@@ -1,0 +1,23 @@
+{
+  "title": "Welcome to react using react-i18next",
+  "label": {
+    "show": "显示",
+    "showing":{
+        "first": "显示",
+        "middle": " / ",
+        "last": "关键词"
+    },
+    "cancel": "取消",
+    "ok": "确定",
+    "sortBy": "排序",
+    "catalog": "目录",
+    "category": "分类",
+    "country": "国家",
+    "price": "价格",
+    "platform": "平台"
+  },
+  "description": {
+    "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
+    "part2": "Switch language between english and german using buttons above."
+  }
+}

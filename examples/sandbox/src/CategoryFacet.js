@@ -141,7 +141,7 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
   }
   return (
     <fieldset className="sui-facet">
-    <legend className="sui-facet__title">Category</legend>
+    <legend className="sui-facet__title">{t('label.category')}</legend>
     <div className="sui-boolean-facet">
     <TreeView
       className={classes.root}

@@ -4,6 +4,9 @@ import React from "react";
 import { appendClassName } from "./view-helpers";
 
 function PagingInfo({
+  showingFirst,
+  showingMiddle,
+  showingLast,
   className,
   end,
   searchTerm,
@@ -13,15 +16,15 @@ function PagingInfo({
 }) {
   return (
     <div className={appendClassName("sui-paging-info", className)} {...rest}>
-      Showing{" "}
+      {showingFirst}{" "}
       <strong>
         {start} - {end}
       </strong>{" "}
-      out of <strong>{totalResults}</strong>
+      {showingMiddle} <strong>{totalResults}</strong>
       {searchTerm && (
         <>
           {" "}
-          for: <em>{searchTerm}</em>
+          {showingLast}: <em>{searchTerm}</em>
         </>
       )}
     </div>
@@ -33,7 +36,10 @@ PagingInfo.propTypes = {
   searchTerm: PropTypes.string.isRequired,
   start: PropTypes.number.isRequired,
   totalResults: PropTypes.number.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  showingFirst: PropTypes.string,
+  showingMiddle: PropTypes.string,
+  showingLast: PropTypes.string
 };
 
 export default PagingInfo;

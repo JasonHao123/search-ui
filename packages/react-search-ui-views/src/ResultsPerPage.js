@@ -22,6 +22,7 @@ const wrapOption = option => ({ label: option, value: option });
 
 function ResultsPerPage({
   className,
+  show,
   onChange,
   options,
   value: selectedValue,
@@ -40,7 +41,7 @@ function ResultsPerPage({
       className={appendClassName("sui-results-per-page", className)}
       {...rest}
     >
-      <div className="sui-results-per-page__label">Show</div>
+      <div className="sui-results-per-page__label">{show}</div>
       <Select
         className="sui-select sui-select--inline"
         classNamePrefix="sui-select"
@@ -58,6 +59,7 @@ ResultsPerPage.propTypes = {
   onChange: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(PropTypes.number).isRequired,
   className: PropTypes.string,
+  show: PropTypes.string,
   value: PropTypes.number
 };
 

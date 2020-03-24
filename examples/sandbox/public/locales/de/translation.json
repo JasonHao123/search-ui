@@ -1,6 +1,12 @@
 {
   "title": "Willkommen zu react und react-i18next",
   "label": {
+    "show": "Show",
+    "showing":{
+        "first": "Showing",
+        "middle": "out of",
+        "last": "for"
+    },
     "cancel": "Cancel",
     "ok": "OK",
     "sortBy": "Sort By",

@@ -1,4 +1,8 @@
 import React, { Component, Suspense } from 'react';
+import { useTranslation, withTranslation, Trans } from 'react-i18next';
+import logo from './logo.svg';
+import './App.css';
+
 import moment from "moment";
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -49,41 +53,8 @@ import {
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
 import PriceFacet from "./PriceFacet.js";
-import { useTranslation,initReactI18next } from 'react-i18next';
-import Backend from 'i18next-xhr-backend';
-import i18next from 'i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
-const i18nextOptions = {
-  // order and from where user language should be detected
-  order: ['querystring', 'cookie', 'localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
 
-  // keys or params to lookup language from
-  lookupQuerystring: 'lng',
-  lookupCookie: 'i18next',
-  lookupLocalStorage: 'i18nextLng',
-  lookupFromPathIndex: 0,
-  lookupFromSubdomainIndex: 0,
-
-  // cache user language on
-  caches: ['localStorage', 'cookie'],
-  excludeCacheFor: ['cimode'], // languages to not persist (cookie, localStorage)
-
-  // optional expire and domain for set cookie
-  cookieMinutes: 10,
-  cookieDomain: 'myDomain',
-
-  // optional htmlTag with lang attribute, the default is:
-  htmlTag: document.documentElement,
-
-  // only detect languages that are in the whitelist
-  checkWhitelist: true
-};
-
-i18next
-  .use(Backend)
-  .use(LanguageDetector)
-  .init(i18nextOptions);
 
 const SORT_OPTIONS = [
   {
@@ -123,7 +94,7 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
 }
 
 const config = {
-  debug: false,
+  debug: true,
   alwaysSearchOnInitialLoad: true,
   searchQuery: {
     result_fields: {
@@ -184,18 +155,9 @@ const config = {
   hasA11yNotifications: true
 };
 
-const changeLanguage = event => {
-   i18next.changeLanguage(event.target.value);
-   window.location.reload(false);
-};
-
 const changeCurrency = event => {
   localStorage.setItem('currency',event.target.value);
   window.location.reload(false);
-};
-
-const changeLanguageNoRefresh = event => {
-   i18next.changeLanguage(event.target.value);
 };
 
 const changeCurrencyNoRefresh = event => {
@@ -281,8 +243,39 @@ function getMeta(metaName) {
   return '';
 }
 
-export default function App() {
+// use hoc for class based components
+class LegacyWelcomeClass extends Component {
+  render() {
+    const { t, i18n } = this.props;
+    return <h2>{t('title')}</h2>;
+  }
+}
+const Welcome = withTranslation()(LegacyWelcomeClass);
+
+// Component using the Trans component
+function MyComponent() {
+  return (
+    <Trans i18nKey="description.part1">
+      To get started, edit <code>src/App.js</code> and save to reload.
+    </Trans>
+  );
+}
+
+// page uses the hook
+function Page() {
+
   const { t, i18n } = useTranslation();
+
+
+  const changeLanguage = event => {
+     i18n.changeLanguage(event.target.value);
+     window.location.reload(false);
+  };
+
+  const changeLanguageNoRefresh = event => {
+     i18n.changeLanguage(event.target.value);
+  };
+
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -312,7 +305,6 @@ export default function App() {
     setOpen(false);
   };
 
-
   return (
     <SearchProvider config={config}>
       <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
@@ -323,7 +315,7 @@ export default function App() {
        <DialogContent>
          <form className={classes.container}>
          <FormControl className={classes.formControl}>
-         <Select value={`${i18next.language}`}
+         <Select value={`${i18n.language}`}
              onChange={changeLanguageNoRefresh}
            >
              <MenuItem value="zh">中文</MenuItem>
@@ -389,7 +381,7 @@ export default function App() {
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                           <FormControl className={classes.formControl}>
-                          <Select value={`${i18next.language}`}
+                          <Select value={`${i18n.language}`}
                               onChange={changeLanguage}
                             >
                               <MenuItem value="zh">中文</MenuItem>
@@ -464,8 +456,8 @@ export default function App() {
                   }
                   bodyHeader={
                     <React.Fragment>
-                      {wasSearched && <PagingInfo />}
-                      {wasSearched && <ResultsPerPage />}
+                      {wasSearched && <PagingInfo showingFirst={t('label.showing.first')} showingMiddle={t('label.showing.middle')} showingLast={t('label.showing.last')} />}
+                      {wasSearched && <ResultsPerPage show={t('label.show')} />}
                     </React.Fragment>
                   }
                   bodyFooter={<Paging />}
@@ -476,5 +468,22 @@ export default function App() {
         }}
       </WithSearch>
     </SearchProvider>
+  );
+}
+
+// loading component for suspense fallback
+const Loader = () => (
+  <div className="App">
+    <img src={logo} className="App-logo" alt="logo" />
+    <div>loading...</div>
+  </div>
+);
+
+// here app catches the suspense from page in case translations are not yet loaded
+export default function App() {
+  return (
+    <Suspense fallback={<Loader />}>
+      <Page />
+    </Suspense>
   );
 }

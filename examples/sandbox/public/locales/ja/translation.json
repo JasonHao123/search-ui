@@ -7,14 +7,20 @@
         "middle": "out of",
         "last": "for"
     },
-    "cancel": "Cancel",
-    "ok": "OK",
-    "sortBy": "Sort By",
-    "catalog": "Catalog",
-    "category": "Category",
-    "country": "Country",
-    "price": "Price",
-    "platform": "Platform"
+    "show": "表示",
+    "showing":{
+        "first": "表示",
+        "middle": "",
+        "last": ""
+    },
+    "cancel": "取消",
+    "ok": "確定",
+    "sortBy": "順位",
+    "catalog": "カタログ",
+    "category": "カテゴリ",
+    "country": "国",
+    "price": "価格",
+    "platform": "プラトホーム"
   },
   "description": {
     "part1": "To get started, edit <1>src/App.js</1> and save to reload.",
