@@ -130,12 +130,16 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     console.log(filter);
     if(!filter) {
       addFilter('category',id,'any');
-      removeFilter('category',parent,'any');
+      if(parent) {
+        removeFilter('category',parent,'any');
+      }
     }else if(filter.values.includes(id)){
       removeFilter('category',id,'any');
     }else {
       addFilter('category',id,'any');
-      removeFilter('category',parent,'any');
+      if(parent) {
+        removeFilter('category',parent,'any');
+      }
     }
 
   }
@@ -153,13 +157,15 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
     {facet.data.map((item) => {
       return (
     <StyledTreeItem key={item.id} nodeId={item.id} selected={filter?filter.values.includes(item.id):false}
-     labelText={item.label} labelInfo={""+item.count}>
+     labelText={item.label} onClick={() => toggleSelection(item.id,null)}
+     labelInfo={item.count>0?""+item.count:""}
+     >
       {item.children.map((sub) => {
         return (
         <StyledTreeItem key={sub.id} selected={filter?filter.values.includes(sub.id):false}
           nodeId={sub.id} onClick={() => toggleSelection(sub.id,item.id)}
           labelText={sub.label}
-          labelInfo={""+sub.count}
+          labelInfo={sub.count>0?""+sub.count:""}
           color="#3a3a3a"
           bgColor="#e8f0fe"
         >
@@ -168,7 +174,7 @@ function CategoryFacet({ filters, clearFilters,addFilter,setFilter,removeFilter,
               <StyledTreeItem key={sub2.id} selected={filter?filter.values.includes(sub2.id):false}
                 nodeId={sub2.id} onClick={() => toggleSelection(sub2.id,sub.id)}
                 labelText={sub2.label}
-                labelInfo={""+sub2.count}
+                labelInfo={sub2.count>0?""+sub2.count:""}
                 color="#1a73e8"
                 bgColor="#e8f0fe"
               />

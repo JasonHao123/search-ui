@@ -1,6 +1,10 @@
 {
   "title": "Welcome to react using react-i18next",
   "label": {
+    "relevance": "Relevance",
+    "newest" : "Latest",
+    "priceAsc": "Price: Low to High",
+    "priceDesc": "Price: High to Low",
     "show": "Show",
     "showing":{
         "first": "Showing",

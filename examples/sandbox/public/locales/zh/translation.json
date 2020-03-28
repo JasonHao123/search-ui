@@ -1,6 +1,10 @@
 {
   "title": "Welcome to react using react-i18next",
   "label": {
+    "relevance": "相关性",
+    "newest" : "最新上市",
+    "priceAsc": "价格升序",
+    "priceDesc": "价格降序",
     "show": "显示",
     "showing":{
         "first": "显示",

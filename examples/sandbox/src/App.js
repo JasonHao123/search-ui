@@ -54,26 +54,6 @@ import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
 import PriceFacet from "./PriceFacet.js";
 
-
-
-const SORT_OPTIONS = [
-  {
-    name: "Relevance",
-    value: "",
-    direction: ""
-  },
-  {
-    name: "Title",
-    value: "title",
-    direction: "asc"
-  },
-  {
-    name: "Price",
-    value: "price_c",
-    direction: "asc"
-  }
-];
-
 let connector;
 if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
   connector = new SiteSearchAPIConnector({
@@ -89,12 +69,12 @@ if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
       process.env.REACT_APP_SEARCH_ENGINE_NAME || "search-ui-examples",
     hostIdentifier:
       process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "host-2376rb",
-    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "/catalog"
+    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "/api"
   });
 }
 
 const config = {
-  debug: true,
+  debug: false,
   alwaysSearchOnInitialLoad: true,
   searchQuery: {
     result_fields: {
@@ -265,6 +245,29 @@ function MyComponent() {
 function Page() {
 
   const { t, i18n } = useTranslation();
+
+  const SORT_OPTIONS = [
+    {
+      name: t("label.relevance"),
+      value: "",
+      direction: ""
+    },
+    {
+      name: t("label.newest"),
+      value: "create_date",
+      direction: "desc"
+    },
+    {
+      name: t("label.priceAsc"),
+      value: "price_c",
+      direction: "asc"
+    },
+    {
+      name: t("label.priceDesc"),
+      value: "price_c",
+      direction: "desc"
+    }
+  ];
 
 
   const changeLanguage = event => {
