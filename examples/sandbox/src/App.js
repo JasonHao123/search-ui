@@ -469,14 +469,6 @@ function Page() {
                   }
                   bodyContent={
                     <Results
-                      titleField="title"
-                      urlField="nps_link"
-                      imageField="image"
-                      platformField="platform"
-                      platformLinkField="platform_link"
-                      priceField="price"
-                      shouldTrackClickThrough={true}
-                      onClickLink = {(title,url) => console.log(title)}
                     />
                   }
                   bodyHeader={
