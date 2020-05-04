@@ -192,10 +192,11 @@ class ProductDetail extends React.Component {
         </Typography>}
  />
    <CardContent>
-
+    <a href={this.state.data.link} target="_blank">
      <Typography className={classes.pos} color="textSecondary">
        {this.state.data.platform}
      </Typography>
+     </a>
      <Typography variant="body2" component="p">
        <CurrencyFormat value={this.state.data.price[0]} displayType={'text'} thousandSeparator={true} prefix={currency[0]} suffix={currency[1]} />
      </Typography>
