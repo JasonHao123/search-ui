@@ -7,15 +7,15 @@ import { Link, Route,Switch } from 'react-router-dom';
 
 
 const Results = ({ results }) => (
-<section class="sui-results-container">
-  {results.map((sub) => {
+<section className="sui-results-container">
+  {results.map((result) => {
     return (
-  <article class="sui-result">
-  <Link to="/product">
-  <img class="sui-result__img" src="https://media.apotea.se/product-images/MS/ebastin-orifarm-filmdragerad-tablett-10-mg-30-st-0.jpg" alt=" " />
+  <article className="sui-result" key={result.id.raw}>
+  <Link to={"/product/"+result.id.raw}>
+  <img className="sui-result__img" src={result.image.raw} alt=" " />
   </Link>
   <p><a href="http://apotea.huixin.io">apotea</a> 62.48</p>
-  <a class="sui-result__title" href="https://www.apotea.se/ebastin-orifarm-filmdragerad-tablett-10-mg-30-st" target="_blank" rel="noopener noreferrer">Ebastin Orifarm薄膜衣片10毫克30片</a>
+  <Link to={"/product/"+result.id.raw} className="sui-result__title">{result.title.snippet}</Link>
   </article>
   );
   })}

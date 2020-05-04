@@ -52,7 +52,7 @@ import {
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
 import PriceFacet from "./PriceFacet.js";
-import ButtonToNavigate from "./ButtonToNavigate.js";
+import ProductDetail from "./ProductDetail.js";
 import Results from "./Results.js";
 import { Link, Route,Switch } from 'react-router-dom';
 
@@ -511,21 +511,11 @@ class App extends Component {
 
     return (
       <Suspense fallback={<Loader />}>
-      <div>
-        <nav className="navbar navbar-light">
-          <ul className="nav navbar-nav">
-            <li><Link to="/">Homes</Link></li>
-            <li><Link to="/category">Category</Link></li>
-            <li><ButtonToNavigate /></li>
-          </ul>
-       </nav>
 
     <Switch>
       <Route exact path="/" component={Page}/>
-      <Route path="/product" component={Category}/>
+      <Route path="/product/:id" component={ProductDetail}/>
     </Switch>
-
-    </div>
      </Suspense>
     );
   }
