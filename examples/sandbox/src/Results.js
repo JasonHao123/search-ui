@@ -79,7 +79,7 @@ function Results({ results }) {
              </CardActionArea>
              <CardContent>
                <Link to={"/product/"+result.id.raw}>
-                <Typography variant="h5" component="h2">
+                <Typography >
                        {result.title.snippet}
                      </Typography>
                      </Link>

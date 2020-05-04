@@ -78,7 +78,7 @@ class AppSearchAPIConnector {
       engineName: engineName,
       additionalHeaders: {
         "x-swiftype-integration": "search-ui",
-        "Accept-Language": lang,
+        language: lang,
         currency: currency,
         "x-swiftype-integration-version": version
       }

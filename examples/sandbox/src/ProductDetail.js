@@ -40,20 +40,15 @@ import ImageGallery from 'react-image-gallery';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
-const images = [
-  {
-    original: 'https://picsum.photos/id/1018/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1018/250/150/',
-  },
-  {
-    original: 'https://picsum.photos/id/1015/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1015/250/150/',
-  },
-  {
-    original: 'https://picsum.photos/id/1019/1000/600/',
-    thumbnail: 'https://picsum.photos/id/1019/1000/600/',
-  },
-];
+import CurrencyFormat from 'react-currency-format';
+
+const currencies = {
+  "USD": ['$',''],
+  "EUR": ['€',''],
+  "CNY": ['¥',''],
+  "JPY": ['¥',''],
+  "SEK": ['','kr']
+};
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -132,22 +127,35 @@ const useStyles = makeStyles((theme) => ({
 
 class ProductDetail extends React.Component {
   state = {
-    posts: [],
+    data: {
+      images:[],
+      tabs:[],
+      price:  ['0.0'],
+    },
     value: 0,
   }
 
   componentDidMount() {
+    var lang = localStorage.getItem("i18nextLng");
+    if (!lang) {
+      lang = "en";
+      localStorage.setItem("i18nextLng", lang);
+    }
+    var currency = localStorage.getItem("currency");
+    if (!currency) {
+      currency = "USD";
+      localStorage.setItem("currency", currency);
+    }
     const { match: { params } } = this.props;
-    axios.get(`/api/product/${params.id}`)
+    axios.get(`/api/product/${params.id}`,{ headers: { language: lang, currency: currency } })
       .then(res => {
-        const posts = res.data.data.children.map(obj => obj.data);
-        this.setState({ posts });
+        this.setState({data:res.data});
       });
   }
 
   render() {
     const { classes } = this.props;
-
+    const currency = currencies[localStorage.getItem('currency')];
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
@@ -169,32 +177,27 @@ class ProductDetail extends React.Component {
         <Grid container spacing={3}
         >
           <Grid item xs={12} sm={5} style={{marginTop: '4em'}}>
-            <ImageGallery items={images} />
+            <ImageGallery items={this.state.data.images} showThumbnails={false} />
           </Grid>
           <Grid item xs={12} sm={7} style={{marginTop: '4em'}}>
           <Card >
           <CardHeader className={classes.title}
    avatar={
      <Avatar aria-label="recipe" className={classes.avatar}>
-       R
+       {this.state.data.rate}
      </Avatar>
    }
-   title="Shrimp and Chorizo Paella"
+   title={     <Typography variant="h5" component="h2">
+          {this.state.data.title}
+        </Typography>}
  />
    <CardContent>
-     <Typography className={classes.title} color="textSecondary" gutterBottom>
-       Word of the Day
-     </Typography>
-     <Typography variant="h5" component="h2">
-       be{bull}nev{bull}o{bull}lent
-     </Typography>
+
      <Typography className={classes.pos} color="textSecondary">
-       adjective
+       {this.state.data.platform}
      </Typography>
      <Typography variant="body2" component="p">
-       well meaning and kindly.
-       <br />
-       {'"a benevolent smile"'}
+       <CurrencyFormat value={this.state.data.price[0]} displayType={'text'} thousandSeparator={true} prefix={currency[0]} suffix={currency[1]} />
      </Typography>
    </CardContent>
    <CardActions disableSpacing>
@@ -218,36 +221,24 @@ class ProductDetail extends React.Component {
         scrollButtons="auto"
         aria-label="scrollable auto tabs example"
       >
-        <Tab label="Item One" {...a11yProps(0)} />
-        <Tab label="Item Two" {...a11yProps(1)} />
-        <Tab label="Item Three" {...a11yProps(2)} />
-        <Tab label="Item Four" {...a11yProps(3)} />
-        <Tab label="Item Five" {...a11yProps(4)} />
-        <Tab label="Item Six" {...a11yProps(5)} />
-        <Tab label="Item Seven" {...a11yProps(6)} />
+      {this.state.data.tabs.map((item) => {
+        return (
+        <Tab label={item.title}  />
+      );
+      })}
       </Tabs>
     </AppBar>
-    <TabPanel value={this.state.value} index={0}>
-      Item One
-    </TabPanel>
-    <TabPanel value={this.state.value} index={1}>
-      Item Two
-    </TabPanel>
-    <TabPanel value={this.state.value} index={2}>
-      Item Three
-    </TabPanel>
-    <TabPanel value={this.state.value} index={3}>
-      Item Four
-    </TabPanel>
-    <TabPanel value={this.state.value} index={4}>
-      Item Five
-    </TabPanel>
-    <TabPanel value={this.state.value} index={5}>
-      Item Six
-    </TabPanel>
-    <TabPanel value={this.state.value} index={6}>
-      Item Seven
-    </TabPanel>
+    {this.state.data.tabs.map((item,i) => {
+      return (
+        <TabPanel value={this.state.value} index={i}>
+          <div
+  dangerouslySetInnerHTML={{
+    __html: item.content
+  }}></div>
+        </TabPanel>
+    );
+    })}
+
           </Grid>
         </Grid>
 
