@@ -62,6 +62,10 @@ class AppSearchAPIConnector {
     }
 
     var lang = localStorage.getItem("i18nextLng");
+    if (!lang) {
+      lang = "en";
+      localStorage.setItem("i18nextLng", lang);
+    }
     var currency = localStorage.getItem("currency");
     if (!currency) {
       currency = "USD";

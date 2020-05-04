@@ -36,7 +36,6 @@ import {
   Facet,
   SearchProvider,
   SearchBox,
-  Results,
   PagingInfo,
   ResultsPerPage,
   Paging,
@@ -53,6 +52,9 @@ import {
 import "@elastic/react-search-ui-views/lib/styles/styles.css";
 import CategoryFacet from "./CategoryFacet.js";
 import PriceFacet from "./PriceFacet.js";
+import ButtonToNavigate from "./ButtonToNavigate.js";
+import Results from "./Results.js";
+import { Link, Route,Switch } from 'react-router-dom';
 
 let connector;
 if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
@@ -99,9 +101,10 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["catalog", "category", "tenant","country"],
+    disjunctiveFacets: ["catalog", "category", "tenant","country","region"],
     facets: {
       tenant: { type: "value" },
+      region: { type: "value" },
       country: { type: "value" },
       category: { type: "value", size: 30 },
       catalog: {  type: "value", size: 30}
@@ -258,6 +261,11 @@ function Page() {
       direction: "desc"
     },
     {
+      name: t("label.promotion"),
+      value: "rate",
+      direction: "asc"
+    },
+    {
       name: t("label.priceAsc"),
       value: "price_c",
       direction: "asc"
@@ -307,6 +315,12 @@ function Page() {
   const handleClose2 = () => {
     setOpen(false);
   };
+
+  const tracking = (a,b) => {
+    console.log(a);
+    this.props.history.push("/category");
+    window.location.href = "/category";
+  }
 
   return (
     <SearchProvider config={config}>
@@ -367,7 +381,9 @@ function Page() {
                       >
                         <MenuIcon />
                       </IconButton>
+                      <a href="https://www.huixin.io">
                       <img src={getMeta('logo')} className={classes.logo} alt="logo" className={classes.sectionDesktop} />
+                      </a>
                         <SearchBox className={classes.search}
                           autocompleteMinimumCharacters={3}
                           autocompleteResults={{
@@ -434,6 +450,11 @@ function Page() {
                       />
                       <CategoryFacet label={t('label.category')} />
                       <Facet
+                        field="region"
+                        label={t('label.region')}
+                        view={MultiCheckboxFacet}
+                      />
+                      <Facet
                         field="country"
                         label={t('label.country')}
                         view={MultiCheckboxFacet}
@@ -455,6 +476,7 @@ function Page() {
                       platformLinkField="platform_link"
                       priceField="price"
                       shouldTrackClickThrough={true}
+                      onClickLink = {(title,url) => console.log(title)}
                     />
                   }
                   bodyHeader={
@@ -483,10 +505,52 @@ const Loader = () => (
 );
 
 // here app catches the suspense from page in case translations are not yet loaded
-export default function App() {
-  return (
-    <Suspense fallback={<Loader />}>
-      <Page />
-    </Suspense>
-  );
+
+class App extends Component {
+  render() {
+
+    return (
+      <Suspense fallback={<Loader />}>
+      <div>
+        <nav className="navbar navbar-light">
+          <ul className="nav navbar-nav">
+            <li><Link to="/">Homes</Link></li>
+            <li><Link to="/category">Category</Link></li>
+            <li><ButtonToNavigate /></li>
+          </ul>
+       </nav>
+
+    <Switch>
+      <Route exact path="/" component={Page}/>
+      <Route path="/product" component={Category}/>
+    </Switch>
+
+    </div>
+     </Suspense>
+    );
+  }
 }
+
+
+/*Home component */
+const Home = (props) => (
+  <div>
+    <h2>Home {console.log(props)}</h2>
+  </div>
+)
+
+/*Product component */
+const Products = () => (
+  <div>
+    <h2>Products</h2>
+  </div>
+)
+
+/*Category component*/
+const Category = () => (
+  <div>
+    <h2>Category</h2>
+  </div>
+)
+
+export default App;

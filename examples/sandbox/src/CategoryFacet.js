@@ -100,7 +100,7 @@ StyledTreeItem.propTypes = {
   color: PropTypes.string,
   selected: PropTypes.bool,
   labelInfo: PropTypes.string,
-  labelText: PropTypes.string.isRequired,
+  labelText: PropTypes.string,
 };
 
 const useStyles = makeStyles({
