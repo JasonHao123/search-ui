@@ -55,6 +55,7 @@ import PriceFacet from "./PriceFacet.js";
 import ProductDetail from "./ProductDetail.js";
 import Results from "./Results.js";
 import { Link, Route,Switch } from 'react-router-dom';
+import {Helmet} from "react-helmet";
 
 let connector = new AppSearchAPIConnector({
  searchKey: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImF1dGhvcml0aWVzIjpbIlBFUk1JU1NJT05fUkVBRCIsIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwianRpIjoiOGNhMmI2NTQtZTNkNS00Yzk3LThhODctNjgyODQ4ZmE3Zjc4IiwidGVuYW50IjoiamFzb24iLCJjbGllbnRfaWQiOiJkZWZhdWx0In0.LGqO8fNovd8tLXTEkYFr4oFxfg2OvAvcfffgF_s9k2sAuIYuIt8ofRLs5np_N5v4OfjCi1WbDuocS8F_7jV3UoAXnBelScQO3iOrmYDgYcaUgHjHw3FTBBCYShsolRAheCIxfgMKq0o04ZLEFkp6osgF7igPeyU0DhNoJrcxcYsR6zSNU5rKBxbBU_sgVQGIYmV30B5EqQP9q2Q_LZCP6fTCZoCW5Ln-ntP3GmRTm4YJHVGuwy_LsTJ5NWMXUFXlMnDFpzEQKW62n2px1t9eze5b2WoCSS-e6LjBlm5235P9tXd9OYF_TgLroI2B9G5QWjcxsLenM3nOfwx3RMA9Ig",
@@ -312,10 +313,24 @@ function Page() {
 
   return (
     <SearchProvider config={config}>
-      <WithSearch mapContextToProps={({ wasSearched }) => ({ wasSearched })}>
-        {({ wasSearched }) => {
+    <WithSearch
+      mapContextToProps={({ searchTerm ,wasSearched }) => ({
+        searchTerm,
+        wasSearched
+      })}
+    >
+        {({ wasSearched,searchTerm }) => {
           return (
             <div className={classes.root}>
+            <Helmet>
+     <meta charSet="utf-8" />
+     <title>{`huixin.io | `+searchTerm}</title>
+     <meta property="og:type" content="website" />
+     <meta property="og:title" content={`huixin.io | `+searchTerm} />
+     <meta property="og:description" content="huixin.io is a website for online shop translation and product search." />
+     <meta property="og:image" content="huixin.png" />
+     <meta property="og:share" content="https://www.huixin.io" />
+ </Helmet>
             <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
        <DialogContent>
          <form className={classes.container}>

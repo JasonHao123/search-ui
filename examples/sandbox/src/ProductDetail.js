@@ -42,6 +42,7 @@ import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
 import CurrencyFormat from 'react-currency-format';
 import Fingerprint2 from 'fingerprintjs2';
+import {Helmet} from "react-helmet";
 
 const currencies = {
   "USD": ['$',''],
@@ -176,10 +177,27 @@ class ProductDetail extends React.Component {
 
     return (
       <React.Fragment>
+          <Helmet>
+               <meta charSet="utf-8" />
+               <title>{`huixin.io | `+this.state.data.title}</title>
+               <meta property="og:type" content="website" />
+               <meta property="og:title" content={this.state.data.title} />
+               <meta property="og:description" content={this.state.data.description} />
+               <meta property="og:image" content={this.state.data.image} />
+               <meta property="og:share" content={this.state.data.share} />
+           </Helmet>
       <AppBar>
       <a color="primary"
         type="link"
-        onClick={() => this.props.history.goBack()}
+        onClick={() => {
+          axios.get(`/api/product/back/${params.id}`,{ headers: {  clientId: localStorage.getItem('clientId') } })
+            .then(res => {
+            });
+          if(this.props.history.length>2)
+            this.props.history.goBack();
+          else
+            this.props.history.replace('../');
+        }}
       >
                   <Fab color="primary" className={classes.fab} aria-label={'back'}>
 
