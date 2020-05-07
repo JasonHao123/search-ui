@@ -41,12 +41,15 @@ const useStyles = makeStyles((theme) => ({
     padding: '0.4em',
   },
   media: {
+    paddingTop: '1em',
     height: '13em!important',
     objectFit: 'scale-down',
   },
   avatar: {
+    position: 'absolute',
+    left: '0.1em',
     backgroundColor: red[500],
-    underline: 'none!',
+    underline: 'none',
   },
 }));
 
@@ -60,14 +63,10 @@ function Results({ results }) {
     return (
   <Grid item xs={6} sm={4} md={3} lg={3} key={result.id.raw}>
   <Card className={classes.root}>
-       <CardHeader className={classes.title}
-         avatar={
-           <Avatar aria-label="recipe" className={classes.avatar}>
-             {result.rate.raw}
-           </Avatar>
-         }
-       />
-       <CardActionArea style={{ marginTop: '-2em' }}>
+       <CardActionArea >
+       <Avatar aria-label="recipe" className={classes.avatar}>
+         {result.rate.raw}
+       </Avatar>
        <Link to={"/product/"+result.id.raw}>
                <CardMedia
                  className={classes.media}
@@ -76,6 +75,7 @@ function Results({ results }) {
                  title="Contemplative Reptile"
                />
                </Link>
+
              </CardActionArea>
              <CardContent>
                <Link to={"/product/"+result.id.raw}>

@@ -56,24 +56,12 @@ import ProductDetail from "./ProductDetail.js";
 import Results from "./Results.js";
 import { Link, Route,Switch } from 'react-router-dom';
 
-let connector;
-if (process.env.REACT_APP_SOURCE === "SITE_SEARCH") {
-  connector = new SiteSearchAPIConnector({
-    engineKey:
-      process.env.REACT_SITE_SEARCH_ENGINE_KEY || "Z43R5U3HiDsDgpKawZkA",
-    documentType: process.env.REACT_SITE_SEARCH_ENGINE_NAME || "national-parks"
-  });
-} else {
-  connector = new AppSearchAPIConnector({
-    searchKey:
-      process.env.REACT_APP_SEARCH_KEY || "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImF1dGhvcml0aWVzIjpbIlBFUk1JU1NJT05fUkVBRCIsIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwianRpIjoiOGNhMmI2NTQtZTNkNS00Yzk3LThhODctNjgyODQ4ZmE3Zjc4IiwidGVuYW50IjoiamFzb24iLCJjbGllbnRfaWQiOiJkZWZhdWx0In0.LGqO8fNovd8tLXTEkYFr4oFxfg2OvAvcfffgF_s9k2sAuIYuIt8ofRLs5np_N5v4OfjCi1WbDuocS8F_7jV3UoAXnBelScQO3iOrmYDgYcaUgHjHw3FTBBCYShsolRAheCIxfgMKq0o04ZLEFkp6osgF7igPeyU0DhNoJrcxcYsR6zSNU5rKBxbBU_sgVQGIYmV30B5EqQP9q2Q_LZCP6fTCZoCW5Ln-ntP3GmRTm4YJHVGuwy_LsTJ5NWMXUFXlMnDFpzEQKW62n2px1t9eze5b2WoCSS-e6LjBlm5235P9tXd9OYF_TgLroI2B9G5QWjcxsLenM3nOfwx3RMA9Ig",
-    engineName:
-      process.env.REACT_APP_SEARCH_ENGINE_NAME || "search-ui-examples",
-    hostIdentifier:
-      process.env.REACT_APP_SEARCH_HOST_IDENTIFIER || "host-2376rb",
-    endpointBase: process.env.REACT_APP_SEARCH_ENDPOINT_BASE || "/api"
-  });
-}
+let connector = new AppSearchAPIConnector({
+ searchKey: "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50SWQiOjEsInVzZXJfbmFtZSI6ImFkbWluIiwic2NvcGUiOlsicmVhZCIsIndyaXRlIl0sImF1dGhvcml0aWVzIjpbIlBFUk1JU1NJT05fUkVBRCIsIlJPTEVfQURNSU4iLCJST0xFX1VTRVIiXSwianRpIjoiOGNhMmI2NTQtZTNkNS00Yzk3LThhODctNjgyODQ4ZmE3Zjc4IiwidGVuYW50IjoiamFzb24iLCJjbGllbnRfaWQiOiJkZWZhdWx0In0.LGqO8fNovd8tLXTEkYFr4oFxfg2OvAvcfffgF_s9k2sAuIYuIt8ofRLs5np_N5v4OfjCi1WbDuocS8F_7jV3UoAXnBelScQO3iOrmYDgYcaUgHjHw3FTBBCYShsolRAheCIxfgMKq0o04ZLEFkp6osgF7igPeyU0DhNoJrcxcYsR6zSNU5rKBxbBU_sgVQGIYmV30B5EqQP9q2Q_LZCP6fTCZoCW5Ln-ntP3GmRTm4YJHVGuwy_LsTJ5NWMXUFXlMnDFpzEQKW62n2px1t9eze5b2WoCSS-e6LjBlm5235P9tXd9OYF_TgLroI2B9G5QWjcxsLenM3nOfwx3RMA9Ig",
+ engineName:  "search-ui-examples",
+ hostIdentifier:  "host-2376rb",
+ endpointBase: "/api"
+});
 
 const config = {
   debug: false,
@@ -499,6 +487,7 @@ const Loader = () => (
 // here app catches the suspense from page in case translations are not yet loaded
 
 class App extends Component {
+
   render() {
 
     return (
@@ -512,27 +501,5 @@ class App extends Component {
     );
   }
 }
-
-
-/*Home component */
-const Home = (props) => (
-  <div>
-    <h2>Home {console.log(props)}</h2>
-  </div>
-)
-
-/*Product component */
-const Products = () => (
-  <div>
-    <h2>Products</h2>
-  </div>
-)
-
-/*Category component*/
-const Category = () => (
-  <div>
-    <h2>Category</h2>
-  </div>
-)
 
 export default App;

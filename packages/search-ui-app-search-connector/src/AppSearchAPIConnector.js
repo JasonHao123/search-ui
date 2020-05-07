@@ -80,6 +80,7 @@ class AppSearchAPIConnector {
         "x-swiftype-integration": "search-ui",
         language: lang,
         currency: currency,
+        clientId: localStorage.getItem("clientId"),
         "x-swiftype-integration-version": version
       }
     });
@@ -94,11 +95,13 @@ class AppSearchAPIConnector {
 
   onResultClick({ query, documentId, requestId, tags = [] }) {
     tags = tags.concat("results");
+    this.client.additionalHeaders.clientId = localStorage.getItem("clientId");
     return this.client.click({ query, documentId, requestId, tags });
   }
 
   onAutocompleteResultClick({ query, documentId, requestId, tags = [] }) {
     tags = tags.concat("autocomplete");
+    this.client.additionalHeaders.clientId = localStorage.getItem("clientId");
     return this.client.click({ query, documentId, requestId, tags });
   }
 
@@ -130,6 +133,7 @@ class AppSearchAPIConnector {
     };
 
     return this.beforeSearchCall(options, async newOptions => {
+      this.client.additionalHeaders.clientId = localStorage.getItem("clientId");
       const response = await this.client.search(query, newOptions);
       return adaptResponse(response, buildResponseAdapterOptions(queryConfig));
     });
@@ -162,6 +166,7 @@ class AppSearchAPIConnector {
         ...restOfQueryConfig,
         ...optionsFromState
       };
+      this.client.additionalHeaders.clientId = localStorage.getItem("clientId");
       const options = removeEmptyFacetsAndFilters(withQueryConfigOptions);
       promises.push(
         this.beforeAutocompleteResultsCall(options, newOptions => {

@@ -6,3 +6,4 @@ storybook-static
 examples/elasticsearch/netlify-lambda/
 package-lock.json
 examples/sandbox/package-lock.json
+examples/sandbox/package-lock.json

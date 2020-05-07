@@ -41,6 +41,7 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 
 import CurrencyFormat from 'react-currency-format';
+import Fingerprint2 from 'fingerprintjs2';
 
 const currencies = {
   "USD": ['$',''],
@@ -147,10 +148,25 @@ class ProductDetail extends React.Component {
       localStorage.setItem("currency", currency);
     }
     const { match: { params } } = this.props;
-    axios.get(`/api/product/${params.id}`,{ headers: { language: lang, currency: currency } })
-      .then(res => {
-        this.setState({data:res.data});
+    let that = this;
+    if(!localStorage.getItem('clientId')) {
+      Fingerprint2.get({fonts: {extendedJsFonts: true}, excludes: {userAgent: true}}, function (components) {
+          var values = components.map(function (component) { return component.value })
+          var clientId = Fingerprint2.x64hash128(values.join(''), 31)
+          console.log(clientId);
+          localStorage.setItem('clientId',clientId);
+          axios.get(`/api/product/${params.id}`,{ headers: { language: lang, currency: currency, clientId: localStorage.getItem('clientId')} })
+            .then(res => {
+              that.setState({data:res.data});
+            });
       });
+    }else {
+      axios.get(`/api/product/${params.id}`,{ headers: { language: lang, currency: currency, clientId: localStorage.getItem('clientId') } })
+        .then(res => {
+          that.setState({data:res.data});
+        });
+    }
+
   }
 
   render() {
@@ -192,14 +208,17 @@ class ProductDetail extends React.Component {
         </Typography>}
  />
    <CardContent>
-    <a href={this.state.data.link} target="_blank">
      <Typography className={classes.pos} color="textSecondary">
        {this.state.data.platform}
      </Typography>
-     </a>
      <Typography variant="body2" component="p">
        <CurrencyFormat value={this.state.data.price[0]} displayType={'text'} thousandSeparator={true} prefix={currency[0]} suffix={currency[1]} />
      </Typography>
+     <a href={this.state.data.link} target="_blank">
+     <Typography variant="body2" component="p">
+       {this.state.data.link}
+     </Typography>
+     </a>
    </CardContent>
    <CardActions disableSpacing>
      <IconButton aria-label="add to favorites">
@@ -222,16 +241,16 @@ class ProductDetail extends React.Component {
         scrollButtons="auto"
         aria-label="scrollable auto tabs example"
       >
-      {this.state.data.tabs.map((item) => {
+      {this.state.data.tabs.map((item,index) => {
         return (
-        <Tab label={item.title}  />
+        <Tab label={item.title} key={index} />
       );
       })}
       </Tabs>
     </AppBar>
     {this.state.data.tabs.map((item,i) => {
       return (
-        <TabPanel value={this.state.value} index={i}>
+        <TabPanel value={this.state.value} index={i} key={i}>
           <div
   dangerouslySetInnerHTML={{
     __html: item.content
