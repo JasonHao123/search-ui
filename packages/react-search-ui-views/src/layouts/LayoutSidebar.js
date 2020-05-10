@@ -6,6 +6,7 @@ import { appendClassName } from "../view-helpers";
 class LayoutSidebar extends React.Component {
   static propTypes = {
     className: PropTypes.string,
+    toggleButton: PropTypes.string,
     open: PropTypes.bool,
     toggle: PropTypes.func,
     children: PropTypes.node
@@ -45,7 +46,7 @@ class LayoutSidebar extends React.Component {
     return (
       <>
         <div className={classes}>
-          {this.renderToggleButton("Save Filters")}
+          {this.renderToggleButton(this.props.toggleButton)}
           {children}
         </div>
       </>

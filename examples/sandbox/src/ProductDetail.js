@@ -174,7 +174,7 @@ class ProductDetail extends React.Component {
     const { classes } = this.props;
     const currency = currencies[localStorage.getItem('currency')];
     const bull = <span className={classes.bullet}>•</span>;
-
+    const { match: { params } } = this.props;
     return (
       <React.Fragment>
           <Helmet>

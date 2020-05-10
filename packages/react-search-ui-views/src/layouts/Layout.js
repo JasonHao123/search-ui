@@ -12,6 +12,7 @@ function Layout({
   bodyFooter,
   bodyHeader,
   sideContent,
+  toggleButton,
   open,
   toggle
 }) {
@@ -24,6 +25,7 @@ function Layout({
         <div className="sui-layout-body__inner">
           <LayoutSidebar
             className="sui-layout-sidebar"
+            toggleButton={toggleButton}
             open={open}
             toggle={toggle}
           >
@@ -52,6 +54,7 @@ Layout.propTypes = {
   bodyFooter: PropTypes.node,
   bodyHeader: PropTypes.node,
   sideContent: PropTypes.node,
+  toggleButton: PropTypes.string,
   open: PropTypes.bool,
   toggle: PropTypes.func
 };

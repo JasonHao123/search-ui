@@ -1,6 +1,8 @@
 {
   "title": "Welcome to react using react-i18next",
   "label": {
+    "brand": "Brand",
+    "toggle": "Save Filters",
     "region": "Region",
     "relevance": "Relevance",
     "newest" : "Latest",

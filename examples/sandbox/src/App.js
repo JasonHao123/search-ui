@@ -90,12 +90,13 @@ const config = {
         }
       }
     },
-    disjunctiveFacets: ["catalog", "category", "tenant","country","region"],
+    disjunctiveFacets: ["catalog", "category", "tenant","country","region","brand"],
     facets: {
       tenant: { type: "value" },
       region: { type: "value" },
       country: { type: "value" },
       category: { type: "value", size: 30 },
+      brand: { type: "value", size: 30 },
       catalog: {  type: "value", size: 30}
     }
   },
@@ -389,15 +390,8 @@ function Page() {
                       </a>
                         <SearchBox className={classes.search}
                           autocompleteMinimumCharacters={3}
-                          autocompleteResults={{
-                            linkTarget: "_blank",
-                            sectionTitle: "Results",
-                            titleField: "title",
-                            urlField: "nps_link",
-                            shouldTrackClickThrough: true,
-                            clickThroughTags: ["test"]
-                          }}
-                          autocompleteSuggestions={true}
+                          autocompleteResults={false}
+                          autocompleteSuggestions={false}
                           debounceLength={0}
                         />
                         <div className={classes.grow} />
@@ -441,6 +435,7 @@ function Page() {
                     </AppBar>
 
                   }
+                  toggleButton={t('label.toggle')}
                   sideContent={
                     <div>
                     {wasSearched && (
@@ -465,6 +460,11 @@ function Page() {
                       <Facet
                         field="tenant"
                         label={t('label.platform')}
+                        view={MultiCheckboxFacet}
+                      />
+                      <Facet
+                        field="brand"
+                        label={t('label.brand')}
                         view={MultiCheckboxFacet}
                       />
                       <PriceFacet label={t('label.price')} />
