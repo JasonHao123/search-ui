@@ -179,7 +179,7 @@ class ProductDetail extends React.Component {
       <React.Fragment>
           <Helmet>
                <meta charSet="utf-8" />
-               <title>{`huixin.io | `+this.state.data.title}</title>
+               <title>{`findi.io | `+this.state.data.title}</title>
                <meta property="og:type" content="website" />
                <meta property="og:title" content={this.state.data.title} />
                <meta property="og:description" content={this.state.data.description} />

@@ -325,12 +325,12 @@ function Page() {
             <div className={classes.root}>
             <Helmet>
      <meta charSet="utf-8" />
-     <title>{`huixin.io | `+searchTerm}</title>
+     <title>{`findi.io | `+searchTerm}</title>
      <meta property="og:type" content="website" />
-     <meta property="og:title" content={`huixin.io | `+searchTerm} />
-     <meta property="og:description" content="huixin.io is a website for online shop translation and product search." />
-     <meta property="og:image" content="huixin.png" />
-     <meta property="og:share" content="https://www.huixin.io" />
+     <meta property="og:title" content={`findi.io | `+searchTerm} />
+     <meta property="og:description" content="findi.io is a website for online shop translation and product search." />
+     <meta property="og:image" content="findi.png" />
+     <meta property="og:share" content="https://www.findi.io" />
  </Helmet>
             <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
        <DialogContent>
@@ -385,7 +385,7 @@ function Page() {
                       >
                         <MenuIcon />
                       </IconButton>
-                      <a href="https://www.huixin.io">
+                      <a href="https://www.findi.io">
                       <img src={getMeta('logo')} className={classes.logo} alt="logo" className={classes.sectionDesktop} />
                       </a>
                         <SearchBox className={classes.search}
@@ -449,21 +449,25 @@ function Page() {
                       <CategoryFacet label={t('label.category')} />
                       <Facet
                         field="region"
+                        filterType="any"
                         label={t('label.region')}
                         view={MultiCheckboxFacet}
                       />
                       <Facet
                         field="country"
+                        filterType="any"
                         label={t('label.country')}
                         view={MultiCheckboxFacet}
                       />
                       <Facet
                         field="tenant"
+                        filterType="any"
                         label={t('label.platform')}
                         view={MultiCheckboxFacet}
                       />
                       <Facet
                         field="brand"
+                        filterType="any"
                         label={t('label.brand')}
                         view={MultiCheckboxFacet}
                       />
